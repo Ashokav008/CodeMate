@@ -30,6 +30,7 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on("connection", (socket) => {
+   console.log("URL ",socket.handshake.headers.host);
   console.log("socket connected", socket.id);
 
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
