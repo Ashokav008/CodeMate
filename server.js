@@ -10,6 +10,7 @@ const io = new Server(server);
 
 app.use(express.static("build"));
 app.use('/*',(req, res, next) => {
+ console.log(`${req.protocol}://${req.hostname}`);
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 // app.use((req, res, next) => {
@@ -69,3 +70,5 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+console.log("server address", server.address());
+
