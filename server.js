@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const http = require("http");
+const ip = require("ip");
+const ipAddress = ip.address();
+const { SocketAddress } = require("net");
 const path = require("path");
 const { Server } = require("socket.io");
 const ACTIONS = require("./src/Actions");
@@ -10,6 +13,7 @@ const io = new Server(server);
 
 app.use(express.static("build"));
 app.use((req, res, next) => {
+  //   console.log(`${req.protocol}://${req.hostname}`);
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
@@ -64,4 +68,10 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+server.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+  console.log(`Network access via: ${ipAddress}:${PORT}!`);
+});
+// console.log("server address", server.address());
+// console.log("server address", server.address());
