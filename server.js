@@ -16,6 +16,9 @@ app.use((req, res, next) => {
   //   console.log(`${req.protocol}://${req.hostname}`);
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+// app.use((req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build", "index.html"));
+// });
 
 const userSocketMap = {};
 function getAllConnectedClients(roomId) {
@@ -31,6 +34,7 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on("connection", (socket) => {
+   console.log("URL ",socket.handshake.headers.host);
   console.log("socket connected", socket.id);
 
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
