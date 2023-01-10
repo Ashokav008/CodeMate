@@ -11,11 +11,11 @@ const ACTIONS = require("./src/Actions");
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static("build"));
-app.use((req, res, next) => {
-  //   console.log(`${req.protocol}://${req.hostname}`);
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+// app.use(express.static("build"));
+// app.use((req, res, next) => {
+//   //   console.log(`${req.protocol}://${req.hostname}`);
+//   res.sendFile(path.join(__dirname, "build", "index.html"));
+// });
 // app.use((req, res, next) => {
 //   res.sendFile(path.join(__dirname, "build", "index.html"));
 // });
@@ -34,7 +34,7 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on("connection", (socket) => {
-   console.log("URL ",socket.handshake.headers.host);
+  console.log("URL ", socket.handshake.headers.host);
   console.log("socket connected", socket.id);
 
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
@@ -77,5 +77,3 @@ server.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   console.log(`Network access via: ${ipAddress}:${PORT}!`);
 });
-// console.log("server address", server.address());
-// console.log("server address", server.address());

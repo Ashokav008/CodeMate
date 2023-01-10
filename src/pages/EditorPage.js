@@ -26,7 +26,6 @@ const EditorPage = () => {
       socketRef.current.on("connect_failed", (err) => handleErrors(err));
       console.log("SOcketRef", socketRef.current);
       function handleErrors(e) {
-        
         console.log("socket error", e);
         toast.error("Socket connection failed, try again later.");
         reactNavigator("/");
