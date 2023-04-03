@@ -137,8 +137,31 @@ footer a:hover {
   margin-top: 20px;
 }
 .CodeMirror {
-  min-height: calc(100vh - 20px);
-  font-size: 20px;
+  min-height: calc(70vh - 20px);
+  font-size: 17px;
   line-height: 1.6;
   padding-top: 20px;
+}
+
+#bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.run-btn {
+  background: #57c131;
+  width: 100px;
+}
+#console {
+  width: 95%;
+  background: #1c1e29;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 17px;
+  color: #eee;
+}
+.output-aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }

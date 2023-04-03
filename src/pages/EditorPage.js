@@ -22,9 +22,11 @@ const EditorPage = () => {
   useEffect(() => {
     const init = async () => {
       socketRef.current = await initSocket();
+      // console.log("Prinin the initSocket ref: ");
+      // console.log(socketRef.current);
       socketRef.current.on("connect_error", (err) => handleErrors(err));
       socketRef.current.on("connect_failed", (err) => handleErrors(err));
-      console.log("SOcketRef", socketRef.current);
+      // console.log("SOcketRef", socketRef.current);
       function handleErrors(e) {
         console.log("socket error", e);
         toast.error("Socket connection failed, try again later.");
@@ -113,6 +115,7 @@ const EditorPage = () => {
           roomId={roomId}
           onCodeChange={(code) => {
             codeRef.current = code;
+            
           }}
         />
       </div>
