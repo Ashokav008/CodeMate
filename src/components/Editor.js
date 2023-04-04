@@ -7,14 +7,20 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 // import options from "../utils/options";
 import ACTIONS from "../Actions";
+import Spinner from "./Spinner";
 
 function doQuatotaion(string) {}
 
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
+  const [langauge, setLangauge] = useState("cpp");
+  const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("Output will be shown here");
+
   useEffect(() => {
+    console.log("Calling useEffect ININT");
+
     async function init() {
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("realtimeEditor"),
@@ -44,6 +50,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
   }, []);
 
   useEffect(() => {
+    console.log("Calling useEffect if socket reference");
     if (socketRef.current) {
       socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         if (code !== null) {
@@ -58,15 +65,19 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
   }, [socketRef.current]);
 
   const compileAndRun = async () => {
+    setIsLoading(true);
     const preElements = document.querySelectorAll(".CodeMirror-code pre");
     let mycode;
     preElements.forEach((preElement) => {
       preElement = preElement.textContent;
       preElement = preElement.trim();
       preElement = preElement.replace(/"/g, '\\"');
-      if (!preElement.endsWith(";")) preElement += " \\n ";
+      console.log(preElement);
+      if (!preElement.endsWith(";") && preElement != "") {
+        preElement += " \\n ";
+      }
+
       mycode += preElement;
-      mycode += " ";
     });
     mycode = mycode.substring(9);
     // setCode(mycode);
@@ -75,20 +86,21 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
       headers: {
         "content-type": "application/json",
         "X-RapidAPI-Key": "3e36b55b3dmshbc37e0d7902dffep1148ebjsn22b47a5d302e",
-        "X-RapidAPI-Host": "cpp-17-code-compiler.p.rapidapi.com",
+        "X-RapidAPI-Host": "online-code-compiler.p.rapidapi.com",
       },
-      body: `{ "code":"${mycode}","version":"latest"}`,
+      body: `{"language":"cpp","version":"latest", "code":"${mycode}","input":null}`,
       // body: `{ "code":"#include<iostream> \\n using namespace std; int main(){cout<<\\"Hellkjkjo, World!\\";}","version":"latest"}`,
     };
     //SOME NECESSERY CHECKS FOR THE BODY PART
     //1-> \n ==\\n
     //2->
 
-    fetch("https://cpp-17-code-compiler.p.rapidapi.com/", options)
+    fetch("https://online-code-compiler.p.rapidapi.com/v1/", options)
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
         setOutput(response.output);
+        setIsLoading(false);
       })
       .catch((err) => console.error(err));
   };
@@ -101,15 +113,33 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         <textarea
           name=""
           value={output}
+          disabled
           id="console"
           cols="10"
           rows="8"
         ></textarea>
+
         <div className="output-aside">
-          <button className="btn">Output </button>
-          <button className="run-btn btn" onClick={compileAndRun}>
-            Compile and Run Code
-          </button>
+          <select
+            id="language"
+            value={langauge}
+            onChange={(e) => {
+              setLangauge(e.target.value);
+            }}
+          >
+            <option value="javascript">C++</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="ruby">Ruby</option>
+          </select>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <button className="run-btn btn" onClick={compileAndRun}>
+              Compile and Run
+            </button>
+          )}
         </div>
       </div>
     </>
