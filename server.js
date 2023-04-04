@@ -50,12 +50,12 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
-    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code, output }) => {
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code, output });
   });
 
   socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
-    io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
+    io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code, output });
   });
 
   socket.on("disconnecting", () => {

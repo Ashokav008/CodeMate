@@ -54,7 +54,7 @@ footer a {
   border: none;
   padding: 10px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 80%;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -120,7 +120,7 @@ footer a:hover {
   font-weight: bold;
 }
 .userName {
-  margin-top: 10px;
+  margin-top: 2%;
 }
 
 .logo {
@@ -139,8 +139,8 @@ footer a:hover {
 .CodeMirror {
   min-height: calc(70vh - 20px);
   font-size: 17px;
-  line-height: 1.6;
-  padding-top: 20px;
+  line-height: 1.3;
+  padding-top: 1%;
 }
 
 #bottom {

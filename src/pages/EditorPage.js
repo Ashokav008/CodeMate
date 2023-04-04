@@ -4,6 +4,7 @@ import ACTIONS from "../Actions";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
 import { initSocket } from "../socket";
+import useOnline from "../utils/useOnline";
 import {
   useLocation,
   useNavigate,
@@ -15,6 +16,7 @@ const EditorPage = () => {
   const socketRef = useRef(null);
   const codeRef = useRef(null);
   const location = useLocation();
+  const isOnline = useOnline();
   const { roomId } = useParams();
   const reactNavigator = useNavigate();
   const [clients, setClients] = useState([]);
@@ -30,7 +32,7 @@ const EditorPage = () => {
       function handleErrors(e) {
         console.log("socket error", e);
         toast.error("Socket connection failed, try again later.");
-        reactNavigator("/");
+        // reactNavigator("/");
       }
 
       socketRef.current.emit(ACTIONS.JOIN, {
@@ -47,6 +49,7 @@ const EditorPage = () => {
             console.log(`${username} joined`);
           }
           setClients(clients);
+
           socketRef.current.emit(ACTIONS.SYNC_CODE, {
             code: codeRef.current,
             socketId,
@@ -88,6 +91,9 @@ const EditorPage = () => {
     return <Navigate to="/" />;
   }
 
+  if (!isOnline) {
+    toast.error("OFFLINE");
+  }
   return (
     <div className="mainWrap">
       <div className="aside">
@@ -95,7 +101,7 @@ const EditorPage = () => {
           <div className="logo">
             <img className="logoImage" src="/code-sync.png" alt="logo" />
           </div>
-          <h3>Connected</h3>
+          <h4>Connected</h4>
           <div className="clientsList">
             {clients.map((client) => (
               <Client key={client.socketId} username={client.username} />
@@ -110,12 +116,12 @@ const EditorPage = () => {
         </button>
       </div>
       <div className="editorWrap">
+        {console.log("Component is getting Rendred!!")}
         <Editor
           socketRef={socketRef}
           roomId={roomId}
           onCodeChange={(code) => {
             codeRef.current = code;
-            
           }}
         />
       </div>
