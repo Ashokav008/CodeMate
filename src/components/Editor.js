@@ -5,6 +5,7 @@ import "codemirror/theme/dracula.css";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
+import "codemirror/keymap/sublime";
 import Console from "./Console";
 import ACTIONS from "../Actions";
 
@@ -20,12 +21,16 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         editorRef.current = Codemirror.fromTextArea(
           document.getElementById("realtimeEditor"),
           {
-            mode: { name: "javascript", json: true },
             // mode: "text/x-c++src",
+            mode: { name: "javascript", json: true },
             theme: "dracula",
+            // keyMap: "sublime",
             autoCloseTags: true,
             autoCloseBrackets: true,
             lineNumbers: true,
+            autofocus: true,
+            showCursorWhenSelecting: true,
+            indentUnit: 4,
           }
         );
       }

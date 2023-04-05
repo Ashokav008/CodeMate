@@ -5,15 +5,28 @@ export function doCodeFormat(langauge) {
   const preElements = document.querySelectorAll(".CodeMirror-code pre");
   preElements.forEach((preElement) => {
     preElement = preElement.textContent;
-    if (preElement === "\u200b") return;
-    if (langauge === "cpp" || langauge === "java") {
+    if (preElement === "\u200b") preElement = "";
+
+    if (
+      langauge === "cpp" ||
+      langauge === "java" ||
+      langauge === "javascript"
+    ) {
       preElement = preElement.trim();
       preElement = preElement.replace(/"/g, '\\"');
-      console.log(preElement);
+      preElement = preElement.replace(/'/g, "\\'");
+      // console.log(preElement);
 
-      if (!preElement.endsWith(";") && preElement !== "") {
-        preElement += " \\n ";
-      }
+      // if (!preElement.endsWith(";") && preElement !== "") {
+      preElement += " \\n ";
+      // }
+      mycode += preElement;
+    } else if (langauge === "python3") {
+      preElement = preElement.replace(/\s+$/g, ""); //remove last whitesaces
+      preElement = preElement.replace(/"/g, '\\"');
+      preElement = preElement.replace(/'/g, "\\'");
+      preElement += " \\n ";
+      console.log(preElement);
       mycode += preElement;
     }
   });

@@ -59,7 +59,7 @@ const Console = ({ socketRef, roomId }) => {
           >
             <option value="cpp">CPP</option>
             <option value="java">Java</option>
-            <option value="python">Python</option>
+            <option value="python3">Python</option>
             <option value="javascript">JavaScript</option>
             <option value="ruby">Ruby</option>
           </select>
