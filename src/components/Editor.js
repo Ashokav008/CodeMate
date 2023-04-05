@@ -35,10 +35,14 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         const code = instance.getValue();
         onCodeChange(code);
         if (origin !== "setValue") {
-          console.log("sending the output from Sender");
+          const cursorPosition = editorRef.current.getCursor();
+          // const cursorPosition = `Line: ${cursor.line}, Character: ${cursor.ch}`;
+          // console.log("Position is : " + cursorPosition);
+          // console.log("sending the output from Sender");
           socketRef.current.emit(ACTIONS.CODE_CHANGE, {
             roomId,
             code,
+            cursorPosition,
           });
         }
       });
@@ -48,9 +52,22 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
   useEffect(() => {
     if (socketRef.current) {
-      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code, cursorPosition }) => {
         if (code !== null) {
           editorRef.current.setValue(code);
+
+          editorRef.current.setCursor({
+            line: cursorPosition.line,
+            ch: cursorPosition.ch,
+          });
+          // editorRef.current.scrollTo(
+          //   null,
+          //   editorRef.current.charCoords(
+          //     { line: cursorPosition.line, ch: cursorPosition.ch },
+          //     "local"
+          //   ).top
+          // );
+          editorRef.current.focus();
         }
       });
     }

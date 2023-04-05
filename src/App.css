@@ -187,3 +187,7 @@ footer a:hover {
   padding: 7%;
   border-radius: 7%;
 }
+.CodeMirror-cursor {
+  width: 10px;
+  background-color: rgb(18, 121, 0);
+}
