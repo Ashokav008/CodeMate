@@ -153,7 +153,7 @@ footer a:hover {
   width: 100px;
 }
 #console {
-  width: 70%;
+  width: 50%;
   background: #1c1e29;
   font-style: italic;
   font-weight: bold;
@@ -164,7 +164,7 @@ footer a:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-right: 10%;
+  margin-right: 2%;
 }
 .spinner {
   display: flex;
@@ -190,4 +190,12 @@ footer a:hover {
 .CodeMirror-cursor {
   width: 10px;
   background-color: rgb(18, 121, 0);
+}
+#user-input {
+  width: 25%;
+  background: #1c1e29;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 17px;
+  color: #eee;
 }

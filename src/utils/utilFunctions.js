@@ -31,22 +31,30 @@ export function doCodeFormat(langauge) {
     }
   });
   mycode = mycode.substring(9);
-
+  console.log("Returning myCode");
   return mycode;
 }
 
-export function getOptionsForCompilationAPI(langauge) {
+export function getOptionsForCompilationAPI(langauge, userInput) {
   langauge = langauge.toLowerCase();
   let formattedCode = doCodeFormat(langauge);
-
+  console.log("GIven userInput is : " + userInput);
+  if (userInput === undefined) {
+    userInput = null;
+  } else {
+    userInput = userInput.replace(/\n/g, " ");
+    userInput = '"' + userInput + '"';
+  }
+  console.log("Printing user Input :" + userInput);
   const options = {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "3e36b55b3dmshbc37e0d7902dffep1148ebjsn22b47a5d302e",
+      // "X-RapidAPI-Key": "3e36b55b3dmshbc37e0d7902dffep1148ebjsn22b47a5d302e",
+      "X-RapidAPI-Key": "4431148801mshf778f084d5b5abap185ce1jsn4f16709c0488",
       "X-RapidAPI-Host": "online-code-compiler.p.rapidapi.com",
     },
-    body: `{"language":"${langauge}","version":"latest", "code":"${formattedCode}","input":null}`,
+    body: `{"language":"${langauge}","version":"latest", "code":"${formattedCode}","input":${userInput} }`,
     // body: `{ "code":"#include<iostream> \\n using namespace std; int main(){cout<<\\"Hellkjkjo, World!\\";}","version":"latest"}`,
   };
   return options;

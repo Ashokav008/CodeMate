@@ -5,6 +5,7 @@ import ACTIONS from "../Actions";
 const Console = ({ socketRef, roomId }) => {
   const [langauge, setLangauge] = useState("cpp");
   const [isLoading, setIsLoading] = useState(false);
+  const [userInput, setUserInput] = useState();
   const [output, setOutput] = useState("Output will be shown here...");
   useEffect(() => {
     if (socketRef.current) {
@@ -25,7 +26,10 @@ const Console = ({ socketRef, roomId }) => {
 
   const compileAndRun = async () => {
     setIsLoading(true);
-    const options = getOptionsForCompilationAPI(langauge);
+    if (userInput === "") userInput = null;
+    console.log("Getting options from api call");
+    const options = getOptionsForCompilationAPI(langauge, userInput);
+    console.log("Making ans api call");
     fetch("https://online-code-compiler.p.rapidapi.com/v1/", options)
       .then((response) => response.json())
       .then((response) => {
@@ -47,7 +51,15 @@ const Console = ({ socketRef, roomId }) => {
           cols="10"
           rows="8"
         ></textarea>
-
+        <textarea
+          id="user-input"
+          name=""
+          placeholder="Enter your input here"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          cols="10"
+          rows="8"
+        ></textarea>
         <div className="output-aside">
           <select
             id="language"
