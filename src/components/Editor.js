@@ -5,7 +5,10 @@ import "codemirror/theme/dracula.css";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
-import "codemirror/keymap/sublime";
+import "codemirror/addon/hint/anyword-hint";
+import "codemirror/addon/hint/show-hint";
+// import "codemirror/keymap/sublime";
+
 import Console from "./Console";
 import ACTIONS from "../Actions";
 
@@ -16,7 +19,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     console.log("Calling useEffect ININT");
 
     async function init() {
-      // this if conciton is because the editor gettign rendered multiple times and that is causing too many issues
+      //(BUG)->Necessery condtiton coz editor getting duplicated
       if (editorRef.current === null) {
         editorRef.current = Codemirror.fromTextArea(
           document.getElementById("realtimeEditor"),
@@ -24,26 +27,54 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             // mode: "text/x-c++src",
             mode: { name: "javascript", json: true },
             theme: "dracula",
-            // keyMap: "sublime",
             autoCloseTags: true,
             autoCloseBrackets: true,
             lineNumbers: true,
             autofocus: true,
             showCursorWhenSelecting: true,
             indentUnit: 4,
+            extraKeys: {
+              "Ctrl-Space": "autocomplete",
+              // "Ctrl-Space": function (cm) {
+              //   const suggestions = Codemirror.hint.anyword(cm);
+              //   Codemirror.showHint(cm, Codemirror.hint.anyword);
+              //   console.log(suggestions);
+              // },
+            },
+
+            hintOptions: {
+              completeOnSingleClick: true,
+              closeOnUnfocus: false,
+            },
           }
         );
       }
 
+      editorRef.current.on("keyup", function (cm, event) {
+        const cur = cm.getCursor();
+        const token = cm.getTokenAt(cur);
+        const currentWord = token.string.trim();
+        console.log("currentWord is : " + currentWord);
+        if (
+          !cm.state.completionActive &&
+          event.keyCode != 13 &&
+          event.keyCode != 27 &&
+          event.keyCode != 16 &&
+          event.keyCode != 17 &&
+          event.keyCode != 18 &&
+          event.keyCode != 20 &&
+          currentWord.length >= 2
+        ) {
+          cm.showHint({ hint: Codemirror.hint.anyword });
+        }
+      });
       editorRef.current.on("change", (instance, changes) => {
         const { origin } = changes;
         const code = instance.getValue();
         onCodeChange(code);
         if (origin !== "setValue") {
           const cursorPosition = editorRef.current.getCursor();
-          // const cursorPosition = `Line: ${cursor.line}, Character: ${cursor.ch}`;
-          // console.log("Position is : " + cursorPosition);
-          // console.log("sending the output from Sender");
+
           socketRef.current.emit(ACTIONS.CODE_CHANGE, {
             roomId,
             code,
@@ -58,20 +89,14 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
   useEffect(() => {
     if (socketRef.current) {
       socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code, cursorPosition }) => {
-        if (code !== null) {
+        if (editorRef.current && code !== null) {
           editorRef.current.setValue(code);
+          if (cursorPosition.line)
+            editorRef.current.setCursor({
+              line: cursorPosition.line,
+              ch: cursorPosition.ch,
+            });
 
-          editorRef.current.setCursor({
-            line: cursorPosition.line,
-            ch: cursorPosition.ch,
-          });
-          // editorRef.current.scrollTo(
-          //   null,
-          //   editorRef.current.charCoords(
-          //     { line: cursorPosition.line, ch: cursorPosition.ch },
-          //     "local"
-          //   ).top
-          // );
           editorRef.current.focus();
         }
       });

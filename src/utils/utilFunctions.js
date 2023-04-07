@@ -22,15 +22,17 @@ export function doCodeFormat(langauge) {
       // }
       mycode += preElement;
     } else if (langauge === "python3") {
-      preElement = preElement.replace(/\s+$/g, ""); //remove last whitesaces
+      preElement = preElement.trimEnd();
+      // preElement = preElement.replace(/\s+$/g, "");
       preElement = preElement.replace(/"/g, '\\"');
       preElement = preElement.replace(/'/g, "\\'");
-      preElement += " \\n ";
+      preElement += "\\n";
       console.log(preElement);
       mycode += preElement;
     }
   });
   mycode = mycode.substring(9);
+  console.log("Mycode is in " + mycode);
   console.log("Returning myCode");
   return mycode;
 }
@@ -38,7 +40,7 @@ export function doCodeFormat(langauge) {
 export function getOptionsForCompilationAPI(langauge, userInput) {
   langauge = langauge.toLowerCase();
   let formattedCode = doCodeFormat(langauge);
-  console.log("GIven userInput is : " + userInput);
+  console.log("Given userInput is : " + userInput);
   if (userInput === undefined) {
     userInput = null;
   } else {
