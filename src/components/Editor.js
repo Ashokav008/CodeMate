@@ -33,6 +33,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             autofocus: true,
             showCursorWhenSelecting: true,
             indentUnit: 4,
+            smartIndent: true,
             extraKeys: {
               "Ctrl-Space": "autocomplete",
               // "Ctrl-Space": function (cm) {
@@ -43,8 +44,8 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             },
 
             hintOptions: {
-              completeOnSingleClick: true,
-              closeOnUnfocus: false,
+              completeSingle: false,
+              // closeOnUnfocus: false,
             },
           }
         );
